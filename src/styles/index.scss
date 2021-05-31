@@ -14,8 +14,12 @@
 
 html, body {
     height: 100vh; 
-    overflow: hidden;
 }
+
+.logo{
+    width: 50px !important;
+}
+
 a{
     text-decoration: none;
 }
@@ -46,7 +50,7 @@ $height : 100px;
 .left-container{
     color: white; 
     background-color: #2969B0; 
-    height: 100vh;
+    min-height: 100vh;
     padding-right: 60px;
     display: flex; 
     flex-direction: column; 
@@ -67,8 +71,7 @@ $height : 100px;
 
 .right-container{
     color: black; 
-    background-color: #E2E2E2; 
-    height: 100vh; 
+    background-color: #E2E2E2;  
     padding-right: 20px;
     padding-left: 60px;
     display: flex; 

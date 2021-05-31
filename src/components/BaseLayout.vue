@@ -3,7 +3,11 @@
     <div class="row">
       <div class="col left-container">
         <div class="top-container position-relative">
-          <router-link :to="{  name: 'Home' }"><span class="position-absolute top-0 start-0 text-white">logo</span></router-link>
+          <router-link :to="{  name: 'Home' }">
+            <span class="position-absolute top-0 start-0 text-white">
+              <svg-icon icon-class="logo_compil" class="logo"></svg-icon>
+            </span>
+          </router-link>
           <router-link :to="{  name: 'NoteIndex' }"><b class="position-absolute top-0 start-50 text-white">notes</b></router-link>
         </div>
         <div class="center-container">
@@ -48,7 +52,7 @@ export default {
       return this.$store.getters['pages/footerPages'];
     }
   },
-  methods: {    
+  methods: {
   }
 }
 </script>

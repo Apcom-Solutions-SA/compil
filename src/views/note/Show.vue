@@ -3,7 +3,7 @@
     <!-- left side -->
     <template v-slot:left>
       <div class="content-container">
-        <h1>{{ note.title }}</h1>
+        <h1>{{ trans(note.title) }}</h1>
         <p>{{ note.introduction }}</p>
 
         <!-- action buttons -->
@@ -40,7 +40,7 @@
         <div class="row">
           <div class="col-md-7">
             <div class="d-flex text-primary">
-              <span class="fw-bold">{{ note.title }}</span>
+              <span class="fw-bold">{{ trans(note.title) }}</span>
               <span class="ms-auto">#{{ note.reference }}</span>
             </div>
 

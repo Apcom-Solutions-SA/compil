@@ -18,6 +18,13 @@ export default {
     ...mapGetters('auth', ["signedIn", "authUserId"]),
   },
   methods: {
+    trans(value, locale){
+      if (! value) return; 
+      if (typeof value ==='string') return value; 
+      const lo = locale ? locale: this.$i18n.locale; 
+      let translated = value[lo]; // this.$i18n.locale
+      if (typeof translated ==='string' ) return translated; 
+    },
     dateDisplay(date) {
       if (date) return moment(date, 'YYYY-MM-DD h:mm:ss').format('DD.MM.YYYY');
     },  

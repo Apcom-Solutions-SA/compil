@@ -26,19 +26,6 @@
           >
         </div>
 
-        <!-- title -->
-        <div class="form-group mb-3">
-          <label for="title">{{ $t('front.title') }}</label>
-          <input
-            type="text"
-            class="form-control"
-            id="title"
-            maxlength="140"
-            v-model="item.title"
-            required
-          >
-        </div>
-
         <!-- introduction -->
         <div class="form-group mb-3">
           <label for="introduction">{{ $t('front.intro') }}</label>
@@ -51,22 +38,6 @@
             required
           >
         </div>
-
-        <!-- tags -->
-        <div class="form-group mb-3">
-          <label for="tags">{{ $t('front.tags') }}</label>
-          <smart-tagz
-            autosuggest
-            editable
-            inputPlaceholder=""
-            :allowPaste="{delimiter: ','}"
-            :allowDuplicates="false"
-            :maxTags="20"
-            :defaultTags="tags"
-            :on-changed="tagsChanged"
-            :key="tags_key"
-          />
-        </div>
       </div>
     </div>
 
@@ -77,22 +48,44 @@
       @tab-click="handleClick"
     >
       <el-tab-pane
-        v-for="(locale, index) of $i18n.availableLocales"
+        v-for="(locale, index) in $i18n.availableLocales"
         :key="index"
         :label="locale"
         :name="'tab_'+ locale"
       >
+
+        <!-- title -->
+        <div class="form-group mb-3">
+          <label :for="'title_'+locale">{{ $t('front.title', locale) }}</label>
+          <input
+            type="text"
+            class="form-control"
+            :id="'title_'+locale"
+            maxlength="140"
+            v-model="item.title[locale]"
+          >
+        </div>
+
+        <!-- tags -->
+        <div class="form-group mb-3">
+          <label for="tags">{{ $t('front.tags') }}</label>
+          <vue-tags-input
+            v-model="tag"
+            :tags="item.tags[locale]"
+            @tags-changed="newTags => item.tags[locale] = newTags"
+          />
+        </div>
+
         <!-- content -->
         <div class="form-group mb-3">
           <label :for="'content_'+locale">{{ $t('front.content', locale) }}</label>
-          <tip-tap v-model="item['content_'+locale]" />
+          <tip-tap v-model="item.content[locale]" />
         </div>
       </el-tab-pane>
     </el-tabs>
 
     <div>
       <button
-        type="submit"
         class="btn btn-outline-primary btn-sm"
         @click="this.mode==='new' ? add(): update()"
       >{{ $t('front.save')}}</button>
@@ -103,8 +96,11 @@
 <script>
 import TipTap from '../components/TipTap'
 import { fetchNote } from '@/api/note'
+import VueTagsInput from '@sipec/vue3-tags-input';
+
 export default {
-  components: { TipTap },
+  name: "NoteForm",
+  components: { TipTap, VueTagsInput },
   props: {
     mode: {
       type: String,
@@ -114,15 +110,15 @@ export default {
   data() {
     return {
       item: {
-        key: '',
-        title: '',
+        key: '',        
         introduction: '',
-        content: ''
+        title: {},
+        content: {},   
+        tags: {},     
       },
-      keyPattern: `[^\s'"]`,
-      tags: [],
+      keyPattern: `[^\s'"]`,      
+      tag: '',
       tags_key: 0,
-      translatables: ['content'],
       activeTab: 'tab_' + this.$i18n.locale
     }
   },
@@ -130,25 +126,28 @@ export default {
     if (this.mode == 'edit') {
       this.fetchData();
     }
+    else{
+      for (const locale of this.$i18n.availableLocales){
+        this.item.tags[locale] = [];
+      }
+    }
   },
   methods: {
     handleClick(tab, event) {
       console.log(this.activeTab)
       console.log(tab, event);
-    },
-
-    tagsChanged(value) {
-      this.tags = value;
+      this.tag= '';  // reset tag input
     },
 
     add() {
-      axios.post('/notes', {
-        ...this.item,
-        tags: this.tags,
-      })
+      axios.post('/notes', this.item)
         .then(({ data }) => {
-          console.log('createNote', data);
-          this.$router.push({ name: 'NoteIndex' });
+          const id = data.note.id;          
+          this.$router.push({
+            name: 'NoteShow', params: {
+              id: id
+            }
+          });
         })
       /*
       createNote( this.item ).then(({ data }) => {
@@ -157,19 +156,33 @@ export default {
       */
     },
 
+    update() {
+      axios.patch('/notes/' + this.item.id, {
+        ...this.item,
+        tags: this.tags,
+      })
+        .then(({ data }) => {
+          // console.log('udpatedNote', data);
+          this.$router.push({
+            name: 'NoteShow', params: {
+              id: this.item.id
+            }
+          });
+        }).catch(error => {
+          console.log(error && error.response.data);
+        })
+    },
+
     fetchData() {
       const id = this.$route.params.id;
       fetchNote(id).then(({ data }) => {
         console.log(data);
         if (data.note) this.item = data.note;
         if (data.tags) {
-          // tags 
-          // const locale = this.$i18n.locale;
-          const locale = 'fr'; // no care for locales yet, all taken as 'fr'
-          const tags = data.tags.map(elem => elem.name[locale]);
+          const tags = data.tags.map(elem => elem.name);
           // this.tags = Object.values(tags);
           console.log('tags', tags);
-          this.tags = tags;
+          // this.tags = tags;
           this.tags_key++; // to force update tags
 
           // content 
@@ -182,22 +195,6 @@ export default {
           }
         }
       })
-    },
-
-    update() {
-      axios.patch('/notes/' + this.item.id, {
-        ...this.item,
-        tags: this.tags,
-        locale: this.$i18n.locale
-      })
-        .then(({ data }) => {
-          // console.log('udpatedNote', data);
-          this.$router.push({
-            name: 'NoteShow', params: {
-              id: this.item.id
-            }
-          });
-        })
     },
 
   }

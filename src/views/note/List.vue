@@ -49,7 +49,7 @@
           :key="item.id"
         >
           <header class="d-flex align-items-center">
-            <router-link :to="{  name: 'NoteShow', params: { id: item.id } }"><strong class="title text-primary">{{ item.title }}</strong></router-link>
+            <router-link :to="{  name: 'NoteShow', params: { id: item.id } }"><strong class="title text-primary">{{ trans(item.title) }}</strong></router-link>
             <div class="flex-right-parent ms-auto">
               <i
                 class="fas fa-key"

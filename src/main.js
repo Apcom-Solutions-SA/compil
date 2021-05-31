@@ -26,10 +26,13 @@ import helper from '@/mixins/helper'
 
 // components
 import 'bootstrap'
-import { SmartTagz } from "smart-tagz";
+// import { SmartTagz } from "smart-tagz";
 // import "smart-tagz/dist/smart-tagz.css"; copy and modified in index.scss
 import ElementPlus from 'element-plus';
 import 'element-plus/lib/theme-chalk/index.css';
+
+import VueJsonPretty from 'vue-json-pretty';
+
 
 // local components
 import { registerComponents } from '@/plugins/register-components'
@@ -48,11 +51,10 @@ app.use(ElementPlus)
 app.mixin(helper)
 
 // register components globally
-app.component('SmartTagz', SmartTagz)
 app.component('SvgIcon', SvgIcon)
 app.component('LocaleSelection', LocaleSelection)
 app.component('LogoutButton', LogoutButton)
-
+app.component('VueJsonPretty', VueJsonPretty)
 
 registerComponents(app)
 

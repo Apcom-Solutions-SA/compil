@@ -12,9 +12,9 @@
 
 <script>
 /**
-                    <select v-model="$i18n.locale" @change="set_language($event.target.value)">
-                        <option v-for="locale in $i18n.availableLocales" :key="locale">{{ locale }}</option>
-                    </select>
+  <select v-model="$i18n.locale" @change="set_language($event.target.value)">
+    <option v-for="locale in $i18n.availableLocales" :key="locale">{{ locale }}</option>
+  </select>
  */
 export default {
   methods: {
