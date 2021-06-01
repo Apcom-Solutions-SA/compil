@@ -9,7 +9,7 @@ export default {
   name: "LoginForm",
   props:{
     link_class: {
-      default: 'btn btn-outline-dark btn-sm'
+      default: 'btn btn-outline-light btn-sm'
     }
   },
   data () {

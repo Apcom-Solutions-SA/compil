@@ -1,12 +1,12 @@
 <template>
   <div>
-    <a
-      class="text-uppercase text-primary px-1"
+    <span
+      class="text-uppercase px-1 pointer"
       :class="{'fw-bold': $i18n.locale===locale}"
       v-for="locale in $i18n.availableLocales"
       :key="locale"
       @click="set_language(locale)"
-    >{{ locale }}</a>
+    >{{ locale }}</span>
   </div>
 </template>
 

@@ -3,6 +3,7 @@
   <div
     v-on:submit.prevent="post"
     class="note-form container-fluid"
+    v-if="authorized"
   >
     <div class="row">
       <div class="col-md-7">
@@ -23,19 +24,6 @@
             :pattern="keyPattern"
             v-model="item.key"
             :title="$t('front.note_key_limite')"
-          >
-        </div>
-
-        <!-- introduction -->
-        <div class="form-group mb-3">
-          <label for="introduction">{{ $t('front.intro') }}</label>
-          <input
-            type="text"
-            class="form-control"
-            id="introduction"
-            maxlength="280"
-            v-model="item.introduction"
-            required
           >
         </div>
       </div>
@@ -66,12 +54,24 @@
           >
         </div>
 
+        <!-- introduction -->
+        <div class="form-group mb-3">
+          <label :for="'introduction'+locale">{{ $t('front.intro', locale) }}</label>
+          <input
+            type="text"
+            class="form-control"
+            :id="'introduction'+locale"
+            maxlength="280"
+            v-model="item.introduction[locale]"
+          >
+        </div>
+
         <!-- tags -->
         <div class="form-group mb-3">
           <label for="tags">{{ $t('front.tags') }}</label>
           <vue-tags-input
             v-model="tag"
-            :tags="item.tags[locale]"
+            :tags="item.tags && item.tags[locale] || []"
             @tags-changed="newTags => item.tags[locale] = newTags"
           />
         </div>
@@ -110,42 +110,42 @@ export default {
   data() {
     return {
       item: {
-        key: '',        
-        introduction: '',
+        key: '',
+        introduction: {},
         title: {},
-        content: {},   
-        tags: {},     
+        content: {},
+        tags: {},
       },
-      keyPattern: `[^\s'"]`,      
+      keyPattern: `[^\s'"]`,
       tag: '',
       tags_key: 0,
-      activeTab: 'tab_' + this.$i18n.locale
+      activeTab: 'tab_' + this.$i18n.locale, 
+      authorized: false
     }
   },
   created() {
     if (this.mode == 'edit') {
       this.fetchData();
     }
-    else{
-      for (const locale of this.$i18n.availableLocales){
-        this.item.tags[locale] = [];
-      }
+    else {
+      this.authorized = true; 
+      this.init_translatables();
     }
   },
   methods: {
     handleClick(tab, event) {
       console.log(this.activeTab)
       console.log(tab, event);
-      this.tag= '';  // reset tag input
+      this.tag = '';  // reset tag input
     },
 
     add() {
       axios.post('/notes', this.item)
         .then(({ data }) => {
-          const id = data.note.id;          
+          const reference = data.note.reference;
           this.$router.push({
             name: 'NoteShow', params: {
-              id: id
+              reference: reference
             }
           });
         })
@@ -157,15 +157,12 @@ export default {
     },
 
     update() {
-      axios.patch('/notes/' + this.item.id, {
-        ...this.item,
-        tags: this.tags,
-      })
+      axios.patch('/notes/' + this.item.id, this.item)
         .then(({ data }) => {
-          // console.log('udpatedNote', data);
+          console.log('udpatedNote', data);
           this.$router.push({
             name: 'NoteShow', params: {
-              id: this.item.id
+              reference: this.item.reference
             }
           });
         }).catch(error => {
@@ -174,28 +171,25 @@ export default {
     },
 
     fetchData() {
-      const id = this.$route.params.id;
-      fetchNote(id).then(({ data }) => {
+      const reference = this.$route.params.reference;
+      fetchNote(reference).then(({ data }) => {
         console.log(data);
-        if (data.note) this.item = data.note;
-        if (data.tags) {
-          const tags = data.tags.map(elem => elem.name);
-          // this.tags = Object.values(tags);
-          console.log('tags', tags);
-          // this.tags = tags;
-          this.tags_key++; // to force update tags
-
-          // content 
-          for (const translatable of this.translatables) {
-            for (const locale of this.$i18n.availableLocales) {
-              if (this.item[translatable] && this.item[translatable][locale]) {
-                this.item[translatable + '_' + locale] = this.item[translatable][locale];
-              }
-            }
-          }
-        }
+        if (data.note) this.item = data.note; 
+        this.authorized = this.authUserId === this.item.user_id; 
+        this.init_translatables();           
       })
     },
+
+    init_translatables(){
+      const translatables = ['title', 'introduction', 'content', 'tags']; 
+      for (const attribute of translatables){
+        if (! this.item[attribute]) this.item[attribute] = {}; 
+
+      }
+      for (const locale of this.$i18n.availableLocales) {        
+        if (! this.item.tags[locale]) this.item.tags[locale] = [];
+      }
+    }
 
   }
 }

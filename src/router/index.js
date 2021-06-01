@@ -42,7 +42,7 @@ const routes = [
     component: () => import('@/views/note/List')
   },
   {
-    path: '/notes/author/:author_id',
+    path: '/notes/author/:author_public_id',
     name: 'NotesAuthor',
     component: () => import('@/views/note/List')
   },
@@ -52,12 +52,12 @@ const routes = [
     component: () => import('@/views/note/Create')
   },
   {
-    path: '/note/:id',
+    path: '/note/:reference',
     name: 'NoteShow',
     component: () => import('@/views/note/Show')
   },
   {
-    path: '/note/:id/edit',
+    path: '/note/:reference/edit',
     name: 'NoteEdit',
     component: () => import('@/views/note/Edit')
   },
@@ -70,6 +70,11 @@ const routes = [
     path:'/page/:id', 
     name:'PageShow',
     component: () => import('@/views/PageShow')
+  }, 
+  {
+    path:'/email/verify/:id/:hash', 
+    name:'EmailVerification', 
+    component: () => import('@/views/EmailVerification')
   }
 ]
 

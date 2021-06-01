@@ -8,9 +8,9 @@ export function fetchList(query) {
   })
 }
 
-export function fetchNote(id) {
+export function fetchNote(reference) {
   return request({
-    url: '/notes/' + id,
+    url: '/notes/' + reference,
     method: 'get'
   })
 }

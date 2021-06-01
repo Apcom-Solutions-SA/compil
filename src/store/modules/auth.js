@@ -4,12 +4,11 @@ const auth = {
   namespaced: true,
   state: {
     token: localStorage.getItem("token") || "",
-    authUser: JSON.parse(window.localStorage.getItem("authUser"))   // avoid use "user" as key
+    authUser: JSON.parse(window.localStorage.getItem("authUser")),   // avoid use "user" as key    
   },
 
   mutations: {
     authUserMutation(state, payload) {
-      console.log('authUserMutation');
       state.authUser = payload;
       localStorage.setItem("authUser", JSON.stringify(payload));
       sessionStorage.setItem("authUserUpdated", Date.now());    // window.sessionStorage.getItem("authUserUpdated")  1601982016864 
@@ -49,7 +48,8 @@ const auth = {
           .then(({ data }) => {
             // console.log(data); 
             if (data.user) commit("authUserMutation", data.user);
-            if (data.token) commit("tokenMutation", data.token)
+            if (data.token) commit("tokenMutation", data.token); 
+            if (data.blockedPids) commit("blockedPidsMutation", data.blockedPids); 
             resolve(data);
           })
           .catch(error => {
@@ -79,7 +79,7 @@ const auth = {
             reject(error);
           });
       })
-    }
+    }, 
   },
 
   getters: {
@@ -89,9 +89,6 @@ const auth = {
     },
     authUserId: (state) => {
       if (state.authUser) return state.authUser.id;
-    },
-    authStudioId: (state) => {
-      if (state.authUser) return state.authUser.studio_id;
     },
     isAdmin: (state) => {
       if (state.authUser) return state.authUser.role_id === 1;

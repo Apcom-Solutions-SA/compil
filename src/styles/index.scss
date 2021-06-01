@@ -50,20 +50,24 @@ $height : 100px;
 .left-container{
     color: white; 
     background-color: #2969B0; 
-    min-height: 100vh;
-    padding-right: 60px;
+    min-height: 100vh;    
     display: flex; 
     flex-direction: column; 
     .top-container{
         height: $height;
+        .nav-container{
+            display: flex; 
+            align-items: center; 
+            justify-content: flex-end;
+        }
     }
+
     .center-container{
         flex-grow: 1;        
         display: flex;
         justify-content: flex-end; 
         align-items: center; 
         .content-container{
-            max-width: 300px;
             min-height: 50vh; 
         }
     }
@@ -73,14 +77,10 @@ $height : 100px;
     color: black; 
     background-color: #E2E2E2;  
     padding-right: 20px;
-    padding-left: 60px;
     display: flex; 
     flex-direction: column; 
     .top-container{
         height: $height;
-        display: flex; 
-        align-items: center; 
-        justify-content: flex-end;
     }
     .center-container{
         flex-grow: 1;
@@ -91,6 +91,17 @@ $height : 100px;
         .content-container{
             min-height: 50vh; 
         }
+    }
+}
+@media (min-width: 768px){
+    .left-container{
+        padding-right: 60px;
+        .content-container{
+           padding-left: 40%;
+        }
+    }
+    .right-container{
+        padding-left: 60px;
     }
 }
 /* tip tap */

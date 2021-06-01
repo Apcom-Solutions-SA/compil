@@ -1,7 +1,6 @@
 <template>
   <form v-on:submit.prevent="login()">
     <div class="py-3">
-      <h4 class="text-primary">Connexion</h4>
       <div
         class="alert alert-danger"
         role="alert"
@@ -35,7 +34,7 @@
       <button
         type="submit"
         class="btn btn-outline-primary"
-      >Me connecter</button>
+      >{{ $t('front.connect')}}</button>
     </div>
   </form>
 </template>
@@ -43,6 +42,7 @@
 <script>
 export default {
   name: "LoginForm",
+  props:['id', 'hash','signature'],
   data() {
     return {
       email: "",
@@ -53,11 +53,13 @@ export default {
   methods: {
     login(e) {
       this.message = "";
-      this.$store
-        .dispatch("auth/loginAction", {
+      let request_data = {
           email: this.email,
           password: this.password
-        })
+        }; 
+      if (this.hash) request_data = { ...request_data, id: this.id, hash: this.hash}; 
+      this.$store
+        .dispatch("auth/loginAction", request_data)
         .then((data) => {
           this.$emit("success");
         }, error => {

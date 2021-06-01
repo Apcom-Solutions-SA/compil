@@ -38,7 +38,7 @@
           <input
             type="text"
             class="form-control"
-            placeholder="search"
+            :placeholder="$t('front.search')"
             v-model="search_input"
             v-on:keyup.enter="fetch(1)"
           />
@@ -49,17 +49,17 @@
           :key="item.id"
         >
           <header class="d-flex align-items-center">
-            <router-link :to="{  name: 'NoteShow', params: { id: item.id } }"><strong class="title text-primary">{{ trans(item.title) }}</strong></router-link>
+            <router-link :to="{  name: 'NoteShow', params: { reference: item.reference } }"><strong class="title text-primary">{{ trans(item.title) }}</strong></router-link>
             <div class="flex-right-parent ms-auto">
               <i
                 class="fas fa-key"
                 v-if="item.key"
               ></i>
               <small>{{ dateDisplay(item.updated_at) }}</small>
-              <router-link :to="{  name: 'NoteShow', params: { id: item.id } }"><span class="text-primary">#{{ item.reference }}</span></router-link>
+              <router-link :to="{  name: 'NoteShow', params: { reference: item.reference} }"><span class="text-primary">#{{ item.reference }}</span></router-link>
             </div>
           </header>
-          <p>{{ item.introduction }}</p>
+          <p>{{ trans(item.introduction) }}</p>
         </article>
 
         <div>
@@ -96,8 +96,8 @@ export default {
     ...mapGetters({
       message: 'pages/noteIndexMessage'
     }), 
-    author_id(){
-      return this.$route.params.author_id; 
+    author_public_id(){
+      return this.$route.params.author_public_id; 
     }
   },
   created() {
@@ -119,8 +119,8 @@ export default {
       }
       var url = this.path + '?page=' + page;
       if (this.search_input.length > 0) url += `&search=${this.search_input}`;
-      if (this.hide_others) url +=`&auther_id=${this.authUserId}`;
-      if (this.author_id >0) url +=`&author_id=${this.author_id}`;
+      if (this.hide_others) url +=`&author_id=${this.authUserId}`;
+      if (this.author_public_id >0) url +=`&author_public_id=${this.author_public_id}`;
       console.log(url);
       return url;
     },
