@@ -64,7 +64,7 @@
         </div>
 
         <!-- note content -->
-        <div v-html="note.content && note.content[$i18n.locale]" />
+        <div v-html="note.content && note.content[$i18n.locale]" class="ProseMirror" />
       </div>
     </template>
   </base-layout>

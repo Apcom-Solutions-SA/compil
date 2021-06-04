@@ -1,7 +1,12 @@
 <template>
   <div class="screen-container container-fluid">
     <div class="position-relative">
-      <router-link :to="{  name: 'Root' }"><span class="position-absolute top-0 start-0 text-white">logo</span></router-link>
+      <router-link :to="{  name: 'Root' }"><span class="position-absolute top-0 start-0 text-white">
+          <svg-icon
+            icon-class="logo_compil"
+            class="logo"
+          ></svg-icon>
+        </span></router-link>
     </div>
     <div class="center-container">
       <div class="card login-container">

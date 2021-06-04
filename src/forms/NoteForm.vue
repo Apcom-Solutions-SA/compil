@@ -68,8 +68,9 @@
 
         <!-- tags -->
         <div class="form-group mb-3">
-          <label for="tags">{{ $t('front.tags') }}</label>
+          <label :for="'tags'+locale">{{ $t('front.tags') }}</label>
           <vue-tags-input
+            :id="'tags'+locale"
             v-model="tag"
             :tags="item.tags && item.tags[locale] || []"
             @tags-changed="newTags => item.tags[locale] = newTags"
@@ -79,7 +80,7 @@
         <!-- content -->
         <div class="form-group mb-3">
           <label :for="'content_'+locale">{{ $t('front.content', locale) }}</label>
-          <tip-tap v-model="item.content[locale]" />
+          <tip-tap :id="'content_'+locale" v-model="item.content[locale]" />
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -118,9 +119,8 @@ export default {
       },
       keyPattern: `[^\s'"]`,
       tag: '',
-      tags_key: 0,
       activeTab: 'tab_' + this.$i18n.locale, 
-      authorized: false
+      authorized: false, 
     }
   },
   created() {
@@ -149,11 +149,6 @@ export default {
             }
           });
         })
-      /*
-      createNote( this.item ).then(({ data }) => {
-        console.log('createNote', data);
-      })
-      */
     },
 
     update() {
@@ -176,15 +171,14 @@ export default {
         console.log(data);
         if (data.note) this.item = data.note; 
         this.authorized = this.authUserId === this.item.user_id; 
-        this.init_translatables();           
+        this.init_translatables();     
       })
     },
 
     init_translatables(){
       const translatables = ['title', 'introduction', 'content', 'tags']; 
       for (const attribute of translatables){
-        if (! this.item[attribute]) this.item[attribute] = {}; 
-
+        if ( this.item[attribute]==null) this.item[attribute] = {}; 
       }
       for (const locale of this.$i18n.availableLocales) {        
         if (! this.item.tags[locale]) this.item.tags[locale] = [];

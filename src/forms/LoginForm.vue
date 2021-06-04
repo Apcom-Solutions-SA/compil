@@ -34,7 +34,7 @@
       <button
         type="submit"
         class="btn btn-outline-primary"
-      >{{ $t('front.connect')}}</button>
+      >{{ $t('front.login')}}</button>
     </div>
   </form>
 </template>

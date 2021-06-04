@@ -33,9 +33,17 @@
 
         <button
           type="button"
-          @click="addImage"
+          @click="setLink"
+          :class="{ 'is-active': editor.isActive('link') }"
         >
           url
+        </button>
+
+        <button
+          type="button"
+          @click="addImage"
+        >
+          img
         </button>
         <!-- hide -->
         <template v-if="false">
@@ -45,14 +53,6 @@
             :class="{ 'is-active': editor.isActive('strike') }"
           >
             s
-          </button>
-
-          <button
-            type="button"
-            @click="setLink"
-            :class="{ 'is-active': editor.isActive('link') }"
-          >
-            link
           </button>
 
           <button
@@ -82,6 +82,7 @@ import Typography from '@tiptap/extension-typography'
 import Image from '@tiptap/extension-image'
 // import TextAlign from '@tiptap/extension-text-align'
 import Link from '@tiptap/extension-link'
+import Underline from '@tiptap/extension-underline'
 
 export default {
   components: {
@@ -113,16 +114,17 @@ export default {
   },
   mounted() {
     this.editor = new Editor({
+      content: this.modelValue,
       extensions: [
         StarterKit,
         // Highlight.configure({ multicolor: true }),
         Typography,
         Image,
         // TextAlign,
-        // Link,
-      ],
-      content: this.value,
-      onUpdate: () => {        
+        Link,
+        Underline
+      ],      
+      onUpdate: () => {
         this.$emit('update:modelValue', this.editor.getHTML())
       },
     })
@@ -132,15 +134,14 @@ export default {
   },
   methods: {
     addImage() {
-      const url = window.prompt('URL')
+      const url = window.prompt('URL'); 
       if (url) {
         this.editor.chain().focus().setImage({ src: url }).run()
       }
     },
 
     setLink() {
-      const url = window.prompt('URL')
-
+      const url = window.prompt('URL img'); 
       this.editor.chain().focus().setLink({ href: url }).run()
     },
   },
