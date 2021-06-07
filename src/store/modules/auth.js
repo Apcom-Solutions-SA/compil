@@ -49,7 +49,6 @@ const auth = {
             // console.log(data); 
             if (data.user) commit("authUserMutation", data.user);
             if (data.token) commit("tokenMutation", data.token); 
-            if (data.blockedPids) commit("blockedPidsMutation", data.blockedPids); 
             resolve(data);
           })
           .catch(error => {

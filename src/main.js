@@ -37,8 +37,14 @@ import VueJsonPretty from 'vue-json-pretty';
 // local components
 import { registerComponents } from '@/plugins/register-components'
 import SvgIcon from '@/components/SvgIcon'// svg component
-import LocaleSelection from '@/components/LocaleSelection.vue' 
+import LocaleSelection from '@/components/LocaleSelection.vue'
 import LogoutButton from '@/components/LogoutButton.vue'
+
+// directiv
+import myLinkify from '@/directives/linkify'
+
+// PWA
+import './registerServiceWorker'
 
 
 const app = createApp(App)
@@ -46,6 +52,9 @@ app.use(store)
 app.use(router)
 app.use(i18n)
 app.use(ElementPlus)
+
+// directiv
+app.directive('linkify', myLinkify)
 
 // mixin
 app.mixin(helper)

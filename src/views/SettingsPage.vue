@@ -114,9 +114,12 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch('block/fetchBlockedIds'); 
+    this.fetch_block();    
   },
   methods: {
+    fetch_block(){
+      this.$store.dispatch('block/fetchBlockedIds').then((data) => console.log(data)); 
+    },
     add_block_user(pid) {
       if (pid.length === 0) return;
       if (this.blockedPids.includes(pid)) return;

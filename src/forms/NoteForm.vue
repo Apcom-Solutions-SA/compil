@@ -9,15 +9,10 @@
       <div class="col-md-7">
         <!-- encrypt key -->
         <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <span
-              class="input-group-text"
-              id="user-key"
-            ><i
-                class="fas fa-key"
-                style="line-height: 1.6"
-              ></i></span>
-          </div>
+          <span
+            class="input-group-text"
+            id="user-key"
+          ><i class="fas fa-key"></i></span>
           <input
             type="text"
             class="form-control"
@@ -80,7 +75,10 @@
         <!-- content -->
         <div class="form-group mb-3">
           <label :for="'content_'+locale">{{ $t('front.content', locale) }}</label>
-          <tip-tap :id="'content_'+locale" v-model="item.content[locale]" />
+          <tip-tap
+            :id="'content_'+locale"
+            v-model="item.content[locale]"
+          />
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -119,8 +117,8 @@ export default {
       },
       keyPattern: `[^\s'"]`,
       tag: '',
-      activeTab: 'tab_' + this.$i18n.locale, 
-      authorized: false, 
+      activeTab: 'tab_' + this.$i18n.locale,
+      authorized: false,
     }
   },
   created() {
@@ -128,7 +126,7 @@ export default {
       this.fetchData();
     }
     else {
-      this.authorized = true; 
+      this.authorized = true;
       this.init_translatables();
     }
   },
@@ -167,21 +165,23 @@ export default {
 
     fetchData() {
       const reference = this.$route.params.reference;
-      fetchNote(reference).then(({ data }) => {
+      axios.get(`/notes/${reference}`, { params:{ with_key: true}}).then(({ data }) => {
         console.log(data);
-        if (data.note) this.item = data.note; 
-        this.authorized = this.authUserId === this.item.user_id; 
-        this.init_translatables();     
+        if (data.note) this.item = data.note;
+        if (data.key) this.item.key = data.key; 
+        if (data.content) this.item.content = data.content; 
+        this.authorized = this.authUserId === this.item.user_id;
+        this.init_translatables();
       })
     },
 
-    init_translatables(){
-      const translatables = ['title', 'introduction', 'content', 'tags']; 
-      for (const attribute of translatables){
-        if ( this.item[attribute]==null) this.item[attribute] = {}; 
+    init_translatables() {
+      const translatables = ['title', 'introduction', 'content', 'tags'];
+      for (const attribute of translatables) {
+        if (this.item[attribute] == null) this.item[attribute] = {};
       }
-      for (const locale of this.$i18n.availableLocales) {        
-        if (! this.item.tags[locale]) this.item.tags[locale] = [];
+      for (const locale of this.$i18n.availableLocales) {
+        if (!this.item.tags[locale]) this.item.tags[locale] = [];
       }
     }
 

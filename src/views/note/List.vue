@@ -52,8 +52,8 @@
             <router-link :to="{  name: 'NoteShow', params: { reference: item.reference } }"><strong class="title text-primary">{{ trans(item.title) }}</strong></router-link>
             <div class="flex-right-parent ms-auto">
               <i
-                class="fas fa-key"
-                v-if="item.key"
+                class="fas fa-key text-secondary"
+                v-if="item.has_key"
               ></i>
               <small>{{ dateDisplay(item.updated_at) }}</small>
               <router-link :to="{  name: 'NoteShow', params: { reference: item.reference} }"><span class="text-primary">#{{ item.reference }}</span></router-link>
@@ -96,9 +96,16 @@ export default {
     ...mapGetters({
       message: 'pages/noteIndexMessage'
     }), 
-    author_public_id(){
-      return this.$route.params.author_public_id; 
-    }
+    public_id() {
+      if ('public_id' in this.$route.query)
+        return this.$route.query.public_id; 
+      return null; 
+    }, 
+    tag() {
+      if ('tag' in this.$route.query)
+        return this.$route.query.tag; 
+      return null; 
+    }, 
   },
   created() {
     this.fetch();
@@ -120,7 +127,8 @@ export default {
       var url = this.path + '?page=' + page;
       if (this.search_input.length > 0) url += `&search=${this.search_input}`;
       if (this.hide_others) url +=`&author_id=${this.authUserId}`;
-      if (this.author_public_id >0) url +=`&author_public_id=${this.author_public_id}`;
+      if (this.public_id) url +=`&public_id=${this.public_id}`;
+      if (this.tag) url +=`&tag=${this.tag}`; 
       console.log(url);
       return url;
     },

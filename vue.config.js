@@ -5,13 +5,13 @@ function resolve(dir) {
 }
 
 const defaultSettings = require('./src/settings.js')
-const name = defaultSettings.title || 'vue Element Admin' // page title
+const name = defaultSettings.title || 'vue Element' // page title
 
 module.exports = {
     pwa: {
         name: name,
         themeColor: '#fff', // white
-        msTileColor: '#2D2D2D',  // dark grey, same color with logo
+        msTileColor: '#2969B0',  // blue, same color in maquette
         appleMobileWebAppCapable: 'yes',
         appleMobileWebAppStatusBarStyle: 'black',
     },

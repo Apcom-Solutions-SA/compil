@@ -7,6 +7,7 @@ const block = {
     blockedPidsMutation(state, payload) {
       state.blockedPids = payload;
       window.localStorage.setItem('blockedPids', JSON.stringify(payload));
+      window.sessionStorage.setItem("blockUpdated", Date.now()); 
     },
     addBlockMutation(state, payload) {
       state.blockedPids.push(payload);
@@ -24,6 +25,7 @@ const block = {
       return new Promise((resolve, reject) => {
         axios.get(`/user/${subject_id}/relation/block`).then(({ data }) => {
           if (data.objects) {
+            console.log('tag',data.objects); 
             const blockedPids = data.objects.map(elem => elem.public_id);
             commit('blockedPidsMutation', blockedPids);
           }

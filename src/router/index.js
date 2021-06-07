@@ -42,11 +42,6 @@ const routes = [
     component: () => import('@/views/note/List')
   },
   {
-    path: '/notes/author/:author_public_id',
-    name: 'NotesAuthor',
-    component: () => import('@/views/note/List')
-  },
-  {
     path: '/note/create',
     name: 'NoteCreate',
     component: () => import('@/views/note/Create')

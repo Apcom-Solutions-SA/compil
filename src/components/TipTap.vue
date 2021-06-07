@@ -83,6 +83,7 @@ import Image from '@tiptap/extension-image'
 // import TextAlign from '@tiptap/extension-text-align'
 import Link from '@tiptap/extension-link'
 import Underline from '@tiptap/extension-underline'
+import Mention from '@tiptap/extension-mention'
 
 export default {
   components: {
@@ -122,7 +123,7 @@ export default {
         Image,
         // TextAlign,
         Link,
-        Underline
+        Underline,         
       ],      
       onUpdate: () => {
         this.$emit('update:modelValue', this.editor.getHTML())

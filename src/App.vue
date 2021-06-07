@@ -22,11 +22,13 @@ export default {
      * Handling the unauthorized case scenario
      * https://blog.sqreen.com/authentication-best-practices-vue/
      */    
-    axios.interceptors.response.use(undefined, function (err) {
+    axios.interceptors.response.use(undefined, function (err){
       return new Promise(function (resolve, reject) {
-        if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
-          // if you ever get an unauthorized, logout the user
-          this.$store.dispatch('auth/LogoutAction')
+        if (err.response.status === 401 ) {
+          console.log('401 in app.vue');
+          localStorage.removeItem("token")
+          window.location.href = "/login";
+
           // you can also redirect to /login if needed !
         }
         throw err;

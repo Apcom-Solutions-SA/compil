@@ -30,11 +30,11 @@
       />
     </div>
 
-    <div class="text-right form-group">
+    <div class="text-end form-group">
       <button
         type="submit"
-        class="btn btn-outline-primary"
-      >{{ $t('front.login')}}</button>
+        class="btn btn-outline-primary btn-sm"
+      >Login</button>
     </div>
   </form>
 </template>

@@ -6,6 +6,26 @@
         <h1>{{ trans(note.title) }}</h1>
         <p>{{ trans(note.introduction) }}</p>
 
+        <span class="ms-auto">#{{ note.reference }}</span>
+
+        <!-- author -->
+        <div class="d-flex flex-wrap align-items-center">
+          {{ $t('front.author')}} :&nbsp;
+          <router-link :to="{ name: 'NoteIndex', query: { public_id: note.user.public_id}}"><small>{{ note.user.public_id }}</small></router-link>
+          <i
+            class="fas ms-auto"
+            :class="authorClass(note.user.public_id)"
+            :title="title(note.user.public_id)"
+            @click="toggle_block_user(note.user.public_id)"
+            v-if="authUserId !== note.user_id"
+          ></i>
+        </div>
+
+        <!-- timestamps -->
+        <div class="mb-3">
+          {{ $t('front.created_at')}} : {{ dateDisplay(note.created_at) }} <br />
+          {{ $t('front.updated_at')}} : {{ dateTimeDisplay(note.updated_at) }}
+        </div>
         <!-- action buttons -->
         <div class="flex-left-parent">
           <!-- go back -->
@@ -39,32 +59,27 @@
     <!-- right side -->
     <template v-slot:right>
       <div class="content-container">
-        <div class="d-flex text-primary">
-          <span class="fw-bold">{{ trans(note.title) }}</span>
-          <span class="ms-auto">#{{ note.reference }}</span>
+        <div
+          class="input-group mb-3"
+          v-if="note.has_key && !key_passed"
+        >
+          <span class="input-group-text"><i class="fas fa-key"></i></span>
+          <input
+            type="text"
+            class="form-control"
+            v-model="key"
+            :placeholder="$t('front.please_enter_decryption_key')"
+            @change="check_key"
+          />
         </div>
-
-        <!-- author -->
-        <div class="d-flex flex-wrap align-items-center">
-          {{ $t('front.author')}} :
-          <router-link :to="{ name: 'NotesAuthor', params: { author_public_id: note.user.public_id}}"><small class="text-primary">{{ note.user.public_id }}</small></router-link>
-          <i
-            class="fas ms-auto"
-            :class="authorClass(note.user.public_id)"
-            :title="title(note.user.public_id)"
-            @click="toggle_block_user(note.user.public_id)"
-            v-if="authUserId !== note.user_id"
-          ></i>
-        </div>
-
-        <!-- timestamps -->
-        <div class="mb-3">
-          {{ $t('front.created_at')}} : {{ dateDisplay(note.created_at) }} <br />
-          {{ $t('front.updated_at')}} : {{ dateTimeDisplay(note.updated_at) }}
-        </div>
-
         <!-- note content -->
-        <div v-html="note.content && note.content[$i18n.locale]" class="ProseMirror" />
+        <template v-else>
+          <div
+            v-html="note.content && note.content[$i18n.locale]"
+            class="ProseMirror"
+            v-linkify
+          />
+        </template>
       </div>
     </template>
   </base-layout>
@@ -75,6 +90,8 @@ export default {
   data() {
     return {
       note: null,
+      key: '',
+      key_passed: false
     }
   },
   created() {
@@ -102,6 +119,22 @@ export default {
       })
     },
 
+    check_key() {
+      axios.post(`/notes/${this.note.id}/key`, { key: this.key }).then(({ data }) => {
+        this.key_passed = true;
+        if (data.content) this.note.content = data.content;
+      }).catch(error => {
+        console.log(error);
+        const message = error.response.data && error.response.data.message;
+        this.$message({
+          message: message || 'Error',
+          type: 'error',
+          duration: 5 * 1000
+        })
+      })
+    },
+
+    // icon to toggle block author
     toggle_block_user(pid) {
       console.log(pid);
       if (this.blockedPids.includes(pid)) {
@@ -115,9 +148,11 @@ export default {
     authorClass(pid) {
       return this.blockedPids.includes(pid) ? 'fa-user-slash text-danger' : 'fa-user text-primary pointer';
     },
+
     title(pid) {
       return this.blockedPids.includes(pid) ? this.$t('front.deblock') : this.$t('front.block');
-    }
+    },
+
   }
 }
 </script>

@@ -16,8 +16,8 @@ html, body {
     height: 100vh; 
 }
 
-.logo{
-    width: 50px !important;
+.svg-icon.logo{
+    height:2em !important;
 }
 
 a{
@@ -53,6 +53,7 @@ $height : 100px;
     min-height: 100vh;    
     display: flex; 
     flex-direction: column; 
+    a {color: white ; }
     .top-container{
         height: $height;
         .nav-container{

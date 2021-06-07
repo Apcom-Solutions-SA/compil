@@ -9,6 +9,8 @@ export default {
       if (this.$store.state.auth.token) {
         // if (!window.sessionStorage.getItem("pagesUpdated"))
         this.$store.dispatch("pages/fetchPages");
+        if (!window.sessionStorage.getItem("blockUpdated"))
+          this.$store.dispatch("block/fetchBlockedIds");
       }
     }
   },
