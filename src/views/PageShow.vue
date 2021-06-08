@@ -6,8 +6,8 @@
         class="content-container"
         v-if="page"
       >
-        <h1>{{ page.title[$i18n.locale]}}</h1>
-        <p>{{ page.introduction[$i18n.locale]}}</p>
+        <h1>{{ trans(page.title) }}</h1>
+        <p>{{ trans(page.introduction) }}</p>
       </div>
     </template>
 

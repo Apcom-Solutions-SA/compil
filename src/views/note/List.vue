@@ -20,17 +20,19 @@
     <template v-slot:right>
       <div class="content-container container">
         <div class="mb-3">
-          <input
-            type="checkbox"
-            id="hide_others"
-            v-model="hide_others"
-            @change="fetch(1)"
-          >&nbsp;
-          <label for="hide_others">
-            {{ $t('front.hide_irrelavent_authors') }}
-          </label>
+          <div v-if="false">
+            <input
+              type="checkbox"
+              id="hide_others"
+              v-model="hide_others"
+              @change="fetch(1)"
+            >&nbsp;
+            <label for="hide_others">
+              {{ $t('front.hide_irrelavent_authors') }}
+            </label>
+          </div>
 
-          <router-link :to="{  name: 'Settings' }"><i class="fas fa-cog text-primary ms-3"></i></router-link>
+          <router-link :to="{  name: 'Settings' }"><i class="fas fa-cog text-primary"></i></router-link>
         </div>
 
         <!-- search input-->
@@ -95,17 +97,17 @@ export default {
   computed: {
     ...mapGetters({
       message: 'pages/noteIndexMessage'
-    }), 
+    }),
     public_id() {
       if ('public_id' in this.$route.query)
-        return this.$route.query.public_id; 
-      return null; 
-    }, 
+        return this.$route.query.public_id;
+      return null;
+    },
     tag() {
       if ('tag' in this.$route.query)
-        return this.$route.query.tag; 
-      return null; 
-    }, 
+        return this.$route.query.tag;
+      return null;
+    },
   },
   created() {
     this.fetch();
@@ -126,9 +128,9 @@ export default {
       }
       var url = this.path + '?page=' + page;
       if (this.search_input.length > 0) url += `&search=${this.search_input}`;
-      if (this.hide_others) url +=`&author_id=${this.authUserId}`;
-      if (this.public_id) url +=`&public_id=${this.public_id}`;
-      if (this.tag) url +=`&tag=${this.tag}`; 
+      if (this.hide_others) url += `&author_id=${this.authUserId}`;
+      if (this.public_id) url += `&public_id=${this.public_id}`;
+      if (this.tag) url += `&tag=${this.tag}`;
       console.log(url);
       return url;
     },

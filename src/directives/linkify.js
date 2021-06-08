@@ -31,7 +31,7 @@ class Content{
 
   // @21.002 (comme un lien ID) au clic ouvre la fiche de la note correspondante
   mention(){
-    this.text = this.text.replace(/@([\w, .]+)/g, '<a href="/note/$1">@$1</a>');
+    this.text = this.text.replace(/@(\d{2}.\d+)/g, '<a href="/note/$1">@$1</a>');
     return this;
   }
 
