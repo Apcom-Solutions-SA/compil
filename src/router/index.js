@@ -37,6 +37,16 @@ const routes = [
     component: () => import('@/views/LoginPage'), 
   },
   {
+    path:'/email/verify/:id/:hash', 
+    name:'EmailVerification', 
+    component: () => import('@/views/EmailVerification')
+  },
+  {
+    path:'/forgot/password', 
+    name: 'ForgotPassword', 
+    component: () => import('@/views/ForgotPassword')
+  },
+  {
     path: '/notes',
     name: 'NoteIndex',
     component: () => import('@/views/note/List')
@@ -65,11 +75,6 @@ const routes = [
     path:'/page/:id', 
     name:'PageShow',
     component: () => import('@/views/PageShow')
-  }, 
-  {
-    path:'/email/verify/:id/:hash', 
-    name:'EmailVerification', 
-    component: () => import('@/views/EmailVerification')
   }
 ]
 

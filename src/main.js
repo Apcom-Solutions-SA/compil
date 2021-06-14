@@ -36,9 +36,6 @@ import VueJsonPretty from 'vue-json-pretty';
 
 // local components
 import { registerComponents } from '@/plugins/register-components'
-import SvgIcon from '@/components/SvgIcon'// svg component
-import LocaleSelection from '@/components/LocaleSelection.vue'
-import LogoutButton from '@/components/LogoutButton.vue'
 
 // directiv
 import myLinkify from '@/directives/linkify'
@@ -60,9 +57,6 @@ app.directive('linkify', myLinkify)
 app.mixin(helper)
 
 // register components globally
-app.component('SvgIcon', SvgIcon)
-app.component('LocaleSelection', LocaleSelection)
-app.component('LogoutButton', LogoutButton)
 app.component('VueJsonPretty', VueJsonPretty)
 
 registerComponents(app)

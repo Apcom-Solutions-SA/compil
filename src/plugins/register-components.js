@@ -7,11 +7,11 @@ const requireComponent = require.context(
   // Whether or not to look in subfolders
   true,
   // The regular expression used to match base component filenames
-  /Base[A-Z]\w+\.(vue)$/
+  /[A-Z]\w+\.(vue)$/
 )
 
 export const registerComponents = app => requireComponent.keys().forEach(fileName => {
-  console.log('fileName', fileName);
+  // console.log('fileName', fileName);
   // Get component config
   const componentConfig = requireComponent(fileName)
 
@@ -26,7 +26,7 @@ export const registerComponents = app => requireComponent.keys().forEach(fileNam
     )
   )
 
-  console.log('componentName', componentName);
+  console.log(componentName); 
 
   // Register component globally
   app.component(
