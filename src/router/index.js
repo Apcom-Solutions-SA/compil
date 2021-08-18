@@ -72,7 +72,7 @@ const routes = [
     component: () => import('@/views/SettingsPage')
   }, 
   {
-    path:'/page/:id', 
+    path:'/page/:slug', 
     name:'PageShow',
     component: () => import('@/views/PageShow')
   }

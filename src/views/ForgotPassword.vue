@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { useToast } from "vue-toastification";
 export default {
   data(){
     return {
@@ -40,6 +41,8 @@ export default {
   },
   methods: {
     forgot_password(){
+      const toast = useToast();
+
       axios.post('/forgot/password', { email: this.email })
       .then(() => {
         this.success_message = this.$t('Done, please check your email.'); 
@@ -47,11 +50,7 @@ export default {
           const data = error.response && error.response.data;
           if (data) {
             console.log(data);
-            this.$message({
-              message: data.message,
-              type: 'error',
-              duration: 10 * 1000
-            })
+            toast.error(data.message); 
           }
       })
     }

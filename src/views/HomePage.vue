@@ -51,6 +51,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { useToast } from "vue-toastification";
 export default {
   data() {
     return {
@@ -69,14 +70,11 @@ export default {
   methods: {
     postEmail() {
       console.log(this.email);
+      const toast = useToast();
       axios.post('/user/email', { email: this.email })
         .then(({ data }) => {
           if (data.status == 'success') {
-            this.$message({
-              message: this.$t('front.added_success'),
-              type: 'success',
-              duration: 5 * 1000
-            });
+            toast.success(this.$t('front.added_success')); 
             this.errors = {};
           }
         })
@@ -87,11 +85,7 @@ export default {
             if (data.errors) {
               this.errors = data.errors;
             }
-            this.$message({
-              message: data.message,
-              type: 'error',
-              duration: 10 * 1000
-            })
+            toast.error(data.message); 
           }
         });
     }

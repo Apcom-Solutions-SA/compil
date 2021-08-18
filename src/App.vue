@@ -28,8 +28,6 @@ export default {
           console.log('401 in app.vue');
           localStorage.removeItem("token")
           window.location.href = "/login";
-
-          // you can also redirect to /login if needed !
         }
         throw err;
       });

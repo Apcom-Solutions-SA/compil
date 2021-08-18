@@ -45,7 +45,7 @@
         <!-- footer pages-->
         <div class="p-3">
           <router-link
-            :to="{ name: 'PageShow', params: {id: page.id} }"
+            :to="{ name: 'PageShow', params: { slug: slug_trans(page.title) } }"
             v-for="page in footerPages"
             :key="page.id"
           >

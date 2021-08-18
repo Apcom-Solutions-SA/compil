@@ -25,8 +25,8 @@
 export default {
   computed: {
     page() {
-      const page_id = this.$route.params.id;
-      return this.$store.getters['pages/getPageById'](page_id);
+      const slug = this.$route.params.slug;
+      return this.$store.getters['pages/getPageBySlug'](slug);
     }
   }
 }

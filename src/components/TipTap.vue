@@ -7,6 +7,7 @@
     >
       <!-- basic formatting -->
       <div>
+        <!-- bold -->
         <button
           type="button"
           @click="editor.chain().focus().toggleBold().run()"
@@ -15,6 +16,7 @@
           b
         </button>
 
+        <!-- underline -->
         <button
           type="button"
           @click="editor.chain().focus().toggleUnderline().run()"
@@ -23,6 +25,7 @@
           s
         </button>
 
+        <!-- italic -->
         <button
           type="button"
           @click="editor.chain().focus().toggleItalic().run()"
@@ -31,6 +34,7 @@
           i
         </button>
 
+        <!-- link -->
         <button
           type="button"
           @click="setLink"
@@ -39,12 +43,30 @@
           url
         </button>
 
+        <!-- image by link -->
         <button
           type="button"
           @click="addImage"
         >
           img
         </button>
+
+        <!-- bullet list -->
+        <button
+          @click="editor.chain().focus().toggleBulletList().run()"
+          :class="{ 'is-active': editor.isActive('bulletList') }"
+        >
+          <i class="fas fa-list-ul"></i>
+        </button>
+
+        <!-- ordered list -->
+        <button
+          @click="editor.chain().focus().toggleOrderedList().run()"
+          :class="{ 'is-active': editor.isActive('orderedList') }"
+        >
+         <i class="fas fa-list-ol"></i>
+        </button>
+
         <!-- hide -->
         <template v-if="false">
           <button
@@ -123,8 +145,8 @@ export default {
         Image,
         // TextAlign,
         Link,
-        Underline,         
-      ],      
+        Underline,
+      ],
       onUpdate: () => {
         this.$emit('update:modelValue', this.editor.getHTML())
       },
@@ -135,14 +157,14 @@ export default {
   },
   methods: {
     addImage() {
-      const url = window.prompt('URL'); 
+      const url = window.prompt('URL');
       if (url) {
         this.editor.chain().focus().setImage({ src: url }).run()
       }
     },
 
     setLink() {
-      const url = window.prompt('URL img'); 
+      const url = window.prompt('URL img');
       this.editor.chain().focus().setLink({ href: url }).run()
     },
   },

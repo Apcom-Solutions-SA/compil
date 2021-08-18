@@ -12,10 +12,12 @@
         <div class="d-flex flex-wrap align-items-center">
           {{ $t('front.author')}} :&nbsp;
           <router-link :to="{ name: 'NoteIndex', query: { public_id: note.user.public_id}}"><small>{{ note.user.public_id }}</small></router-link>
+          
+          <!-- block author -->
           <i
             class="fas ms-auto"
             :class="authorClass(note.user.public_id)"
-            :title="title(note.user.public_id)"
+            :title="getTitle(note.user.public_id)"
             @click="toggle_block_user(note.user.public_id)"
             v-if="authUserId !== note.user_id"
           ></i>
@@ -26,6 +28,7 @@
           {{ $t('front.created_at')}} : {{ dateDisplay(note.created_at) }} <br />
           {{ $t('front.updated_at')}} : {{ dateTimeDisplay(note.updated_at) }}
         </div>
+
         <!-- action buttons -->
         <div class="flex-left-parent">
           <!-- go back -->
@@ -40,17 +43,24 @@
               <button class="btn btn-outline-light btn-sm me-3">{{ $t('front.edit') }}</button>
             </router-link>
 
-            <!-- delete -->
-            <el-popconfirm
-              :title="$t('front.confirm_delete')"
-              :confirmButtonText="$t('front.yes')"
-              :cancelButtonText="$t('front.no')"
-              @confirm="deleteItem"
+            <button
+              class="btn btn-outline-light btn-sm"
+              @click="showDeleteModal=true"
+            >{{ $t('front.delete') }}</button>
+
+            <!-- delete modal-->
+            <vue-modal
+              v-model="showDeleteModal"
             >
-              <template #reference>
-                <button class="btn btn-outline-light btn-sm">{{ $t('front.delete') }}</button>
-              </template>
-            </el-popconfirm>
+              <div class="card delete_modal">
+                <div class="card-body">{{ $t('front.confirm_delete') }}</div>
+                <div class="card-footer text-end">
+                  <button class="btn btn-sm btn-primary me-2" @click="deleteItem">{{ $t('front.yes') }}</button>
+                  <button class="btn btn-sm btn-secondary">{{ $t('front.no') }}</button>
+                </div>
+              </div>
+            </vue-modal>
+
           </template>
         </div>
       </div>
@@ -75,7 +85,7 @@
         <!-- note content -->
         <template v-else>
           <div
-            v-html="note.content && note.content[$i18n.locale]"
+            v-html="trans(note.content)"
             class="ProseMirror"
             v-linkify
           />
@@ -86,12 +96,15 @@
 </template>
 
 <script>
+import { useToast } from "vue-toastification";
+
 export default {
   data() {
     return {
       note: null,
       key: '',
-      key_passed: false
+      key_passed: false,
+      showDeleteModal: false
     }
   },
   created() {
@@ -106,7 +119,7 @@ export default {
     fetch() {
       const reference = this.$route.params.reference;
       axios.get(`/notes/${reference}`)
-        .then(({ data }) => {
+        .then(({ data }) => {          
           if (data.note) this.note = data.note;
         })
     },
@@ -125,12 +138,9 @@ export default {
         if (data.content) this.note.content = data.content;
       }).catch(error => {
         console.log(error);
+        const toast = useToast();
         const message = error.response.data && error.response.data.message;
-        this.$message({
-          message: message || 'Error',
-          type: 'error',
-          duration: 5 * 1000
-        })
+        toast.error(message || 'Error'); 
       })
     },
 
@@ -149,8 +159,8 @@ export default {
       return this.blockedPids.includes(pid) ? 'fa-user-slash text-danger' : 'fa-user text-primary pointer';
     },
 
-    title(pid) {
-      return this.blockedPids.includes(pid) ? this.$t('front.deblock') : this.$t('front.block');
+    getTitle(pid) {
+      return this.blockedPids.includes(pid) ? this.$t('front.deblock') : this.$t('front.unlist');
     },
 
   }

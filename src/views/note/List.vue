@@ -19,6 +19,7 @@
 
     <template v-slot:right>
       <div class="content-container container">
+
         <div class="mb-3">
           <div v-if="false">
             <input
@@ -32,6 +33,8 @@
             </label>
           </div>
 
+          <i class="fas fa-file-alt text-primary pointer me-2" :title="$t('front.see_my_notes')" @click="fetch_my_notes"></i>
+          <!-- settings link-->
           <router-link :to="{  name: 'Settings' }"><i class="fas fa-cog text-primary"></i></router-link>
         </div>
 
@@ -110,7 +113,6 @@ export default {
     },
   },
   created() {
-    this.fetch();
   },
   methods: {
     fetch(page) {
@@ -134,6 +136,12 @@ export default {
       console.log(url);
       return url;
     },
+    // see my notes without pagination
+    fetch_my_notes(){
+      axios.get('/my/notes')
+      .then(({data}) => this.items = data)
+      .catch(error => console.log(error.response && error.response.data)); 
+    }
   }
 }
 </script>

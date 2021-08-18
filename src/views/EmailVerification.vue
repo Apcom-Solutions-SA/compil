@@ -27,6 +27,7 @@
 </template>
 <script>
 import LoginForm from '@/forms/LoginForm'
+import { useToast } from 'vue-toastification'
 export default {
   name: 'Login',
   components: {
@@ -67,12 +68,9 @@ export default {
     },
 
     request_verification_link() {
-      axios.post('/email/verification-notification', { id: this.id }).then(() => {
-        this.$message({
-          message: this.$t('front.success'),
-          type: 'success',
-          duration: 5 * 1000
-        });
+      const toast = useToast();
+      axios.post('/email/verification-notification', { id: this.id }).then(() => {        
+        toast.success(this.$t('front.success')); 
       }).catch(error => {
         const data = error.response && error.response.data;
         if (data) {
@@ -80,11 +78,7 @@ export default {
           if (data.errors) {
             this.errors = data.errors;
           }
-          this.$message({
-            message: data.message,
-            type: 'error',
-            duration: 10 * 1000
-          })
+          toast.error(data.message); 
         }
       });
     }

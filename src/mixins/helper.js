@@ -1,5 +1,6 @@
-  
+
 import { mapGetters } from "vuex";
+var slugify = require('slugify')
 
 export default {
   data() {
@@ -18,20 +19,29 @@ export default {
     ...mapGetters('auth', ["signedIn", "authUserId"]),
   },
   methods: {
-    trans(value, locale){
-      if (! value) return; 
-      if (typeof value ==='string') return value; 
-      const lo = locale ? locale: this.$i18n.locale; 
+    trans(value, locale) {
+      if (!value) return;
+      if (typeof value === 'string') return value;
+      const lo = locale ? locale : this.$i18n.locale;
       let translated = value[lo]; // this.$i18n.locale
-      if (typeof translated ==='string' ) return translated; 
+      if (typeof translated === 'string' && translated.length > 0) return translated;
+      for (const lo of this.$i18n.availableLocales) {
+        let translated = value[lo]; // this.$i18n.locale
+        if (typeof translated === 'string' && translated.length > 0) return translated;
+      }
+      return '';
+    },
+    slug_trans(value, locale){
+      const str = this.trans(value, locale); 
+      return slugify(str); 
     },
     dateDisplay(date) {
       if (date) return moment(date, 'YYYY-MM-DD h:mm:ss').format('DD.MM.YYYY');
-    },  
+    },
     timeDisplay(date) {
       if (date) return moment(date, 'YYYY-MM-DD h:mm:ss').format('hh:mm:ss');
     },
-    dateTimeDisplay(date){
+    dateTimeDisplay(date) {
       if (date) return moment(date, 'YYYY-MM-DD h:mm:ss').format('DD.MM.YYYY hh:mm:ss');
     },
     goBack() {

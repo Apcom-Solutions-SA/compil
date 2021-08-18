@@ -1,7 +1,9 @@
+var slugify = require('slugify')
+
 const module = {
   namespaced: true,
   state: {
-    pages: JSON.parse( window.localStorage.getItem("pages") ) || [],
+    pages: JSON.parse(window.localStorage.getItem("pages")) || [],
   },
   mutations: {
     pagesMutation(state, payload) {
@@ -25,22 +27,30 @@ const module = {
           });
       })
     }
-  }, 
+  },
   getters: {
     noteIndexMessage: (state) => {
-      return state.pages.find(elem => elem.id == 1); 
-    }, 
-    noteCreateMessage: (state) => {
-      return state.pages.find(elem => elem.id == 2); 
-    }, 
-    homeMessage: (state) => {
-      return state.pages.find(elem => elem.id == 3); 
+      return state.pages.find(elem => elem.id == 1);
     },
-    settingsMessage : (state) => {
-      return state.pages.find(elem => elem.id == 4); 
+    noteCreateMessage: (state) => {
+      return state.pages.find(elem => elem.id == 2);
+    },
+    homeMessage: (state) => {
+      return state.pages.find(elem => elem.id == 3);
+    },
+    settingsMessage: (state) => {
+      return state.pages.find(elem => elem.id == 4);
     },
     getPageById: (state) => (id) => {
-      return state.pages.find(elem => elem.id == id); 
+      return state.pages.find(elem => elem.id == id);
+    },
+    getPageBySlug: (state) => (slug) => {      
+      for (const page of state.pages) {
+        const titles = Object.values(page.title); 
+        for (const title of titles) {
+          if (slugify(title) == slug ) return page;
+        }
+      }
     },
     footerPages: (state) => {
       return state.pages.filter(elem => elem.footer == 1);
@@ -48,4 +58,4 @@ const module = {
   }
 }
 
-export default module; 
+export default module;

@@ -4,10 +4,6 @@
       <div class="content-container">
         <article v-if="message">
           <h1>{{ message.title[$i18n.locale] }}</h1>
-          <div
-            v-html="message.content[$i18n.locale] "
-            class="mb-3"
-          />
         </article>
       </div>
     </template>

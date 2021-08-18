@@ -16,9 +16,11 @@
     <option v-for="locale in $i18n.availableLocales" :key="locale">{{ locale }}</option>
   </select>
  */
+import { setup } from '@/locales'
 export default {
   methods: {
-    set_language(lang) {
+    set_language(lang) {      
+      setup(lang); 
       this.$i18n.locale = lang;
       moment.locale(lang);
     }

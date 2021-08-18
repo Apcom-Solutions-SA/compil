@@ -7,7 +7,6 @@ import "@/styles/index.scss"; // global css
 
 
 import './icons' // icon
-import './utils/error-log' // error log
 
 window.axios = require("axios");
 window.axios.defaults.baseURL = location.hostname == 'localhost' ? 'http://localhost:3000/api/v1': 'https://admin.compil.app/api/v1';
@@ -28,10 +27,10 @@ import helper from '@/mixins/helper'
 import 'bootstrap'
 // import { SmartTagz } from "smart-tagz";
 // import "smart-tagz/dist/smart-tagz.css"; copy and modified in index.scss
-import ElementPlus from 'element-plus';
-import 'element-plus/lib/theme-chalk/index.css';
-
+import { VueFinalModal } from 'vue-final-modal'
 import VueJsonPretty from 'vue-json-pretty';
+import Toast from "vue-toastification";
+const toastOptions={}
 
 
 // local components
@@ -48,7 +47,6 @@ const app = createApp(App)
 app.use(store)
 app.use(router)
 app.use(i18n)
-app.use(ElementPlus)
 
 // directiv
 app.directive('linkify', myLinkify)
@@ -58,6 +56,8 @@ app.mixin(helper)
 
 // register components globally
 app.component('VueJsonPretty', VueJsonPretty)
+app.component('vue-modal',VueFinalModal)
+app.use(Toast, toastOptions);
 
 registerComponents(app)
 
